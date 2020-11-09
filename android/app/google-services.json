@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "836380426254",
+    "firebase_url": "https://entry-register-cb77e.firebaseio.com",
+    "project_id": "entry-register-cb77e",
+    "storage_bucket": "entry-register-cb77e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836380426254:android:ce1630afb38b896879fc5f",
+        "android_client_info": {
+          "package_name": "com.example.entry_register"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836380426254-sfml4du0d7djc72q6ssl22lhq87b341s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoHq8MOeVVyg7RWa3ojjAqYpeL4Ac0En0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836380426254-sfml4du0d7djc72q6ssl22lhq87b341s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
