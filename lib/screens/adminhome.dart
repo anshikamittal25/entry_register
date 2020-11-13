@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:entry_register/screens/adminlisttile.dart';
+import 'package:entry_register/screens/home.dart';
+import 'package:entry_register/services/capitalize.dart';
 import 'package:entry_register/services/recordAdmin.dart';
+import 'package:entry_register/services/removeStringSF.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,63 +18,91 @@ class AdminHome extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHome> {
   CollectionReference places = FirebaseFirestore.instance.collection('places');
-  List<RecordAdmin> entries;
+  List<RecordAdmin> entriesList=[];
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      entries=getEntryList();
-    });
+      prepare();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    getEntryList();
     return Scaffold(
       appBar: AppBar(
-        title: Text('UserHome'),
+        title: Text('${capitalize(widget.place)} Register'),
+        actions: [
+          GestureDetector(
+            child: Text('Sign out',textAlign: TextAlign.center,),
+            onTap: (){
+              removeStringSF('place');
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+            },
+          ),
+        ],
       ),
-      body: (entries.isEmpty) ? emptyWidget() : ListView.builder(
-        itemCount: entries.length,
+      body: (entriesList.isEmpty) ? emptyWidget() : ListView.builder(
+        itemCount: entriesList.length,
         itemBuilder: (context,index){
-          return ListTileAdmin(entry: entries[index],);
+          return ListTileAdmin(entry: entriesList[index],);
         },
       ),
     );
   }
 
-  List<RecordAdmin> getEntryList() {
-    List<RecordAdmin> l=[];
-    places
+  Future<List<Map<String,dynamic>>> getUserList() async{
+    List<DocumentSnapshot> tempList;
+    List<Map<String,dynamic>> users=new List();
+    QuerySnapshot userSnapshot = await places
         .doc(widget.place.toLowerCase())
         .collection('users')
-        .get()
-        .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                places
-                    .doc(widget.place.toLowerCase())
-                    .collection('users')
-                    .doc(doc.id)
-                    .collection('entries')
-                    .get()
-                    .then((value) {
-                  value.docs.forEach((element) {
-                    final r=RecordAdmin(
-                        enroll: doc.id,
-                        room: doc.data()['room'],
-                        timeIn: element.data()['time_in'],
-                        timeOut: element.data()['time_out'],
-                        date: element.data()['date'],
-                        purpose: element.data()['purpose'],
-                    );
-                    print(r.enroll);
-                    l.add(r);
-                  });
-                });
-              })
-            });
-    return l;
+        .get();
+    tempList = userSnapshot.docs;
+    users = tempList.map((DocumentSnapshot docSnapshot) {
+      var userId = {'id':docSnapshot.id,'room':docSnapshot.data()['room'],};
+      return userId;
+    }).toList();
+    return users;
+  }
+
+  Future<void> getEntryList() async{
+    List<Map<String,dynamic>> usersId= await getUserList();
+    for(int i=0;i<usersId.length;i++){
+      List<DocumentSnapshot> tempList;
+      List<RecordAdmin> entryList = new List();
+      QuerySnapshot entrySnapshot = await places
+          .doc(widget.place.toLowerCase())
+          .collection('users')
+          .doc(usersId[i]['id'])
+          .collection('entries')
+          .get();
+      tempList = entrySnapshot.docs;
+      entryList = tempList.map((DocumentSnapshot element) {
+        final r=RecordAdmin(
+          enroll: usersId[i]['id'],
+          room: usersId[i]['room'],
+          timeIn: element.data()['time_in'],
+          timeOut: element.data()['time_out'],
+          date: element.data()['date'],
+          purpose: element.data()['purpose'],
+          createdAt: element.data()['createdAt'],
+        );
+        return r;
+      }).toList();
+      setState(() {
+        entriesList.addAll(entryList);
+        //entriesList.sort((a,b)=>b.createdAt.compareTo(a.createdAt));
+      });
+    }
+  }
+
+  void prepare() async {
+    await getEntryList();
   }
 
   Widget emptyWidget() {
@@ -88,11 +119,6 @@ class _AdminHomeState extends State<AdminHome> {
             Icons.sentiment_neutral,
             size: 80,
             color: Colors.red,
-          ),
-          Text(
-            'GO! Create your first entry',
-            style: TextStyle(
-                fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
           ),
         ],
       ),

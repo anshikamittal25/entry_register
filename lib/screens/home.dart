@@ -53,8 +53,9 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
+              Text('Already have an account?'),
               GestureDetector(
-                child: Text('Instead Log in as user'),
+                child: Text('Log in as user',style: TextStyle(color: Colors.blueAccent[700],decoration: TextDecoration.underline),),
                 onTap: (){
                   Navigator.push(
                     context,

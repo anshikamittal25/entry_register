@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:entry_register/screens/loading.dart';
 import 'package:entry_register/screens/userlisttile.dart';
 import 'package:entry_register/services/recordUser.dart';
+import 'package:entry_register/services/removeStringSF.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'home.dart';
 
 class UserHome extends StatefulWidget {
   final String placeName;
@@ -29,6 +34,17 @@ class _UserHomeState extends State<UserHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text('UserHome'),
+        actions: [
+          GestureDetector(
+            child: Text('Log out'),
+            onTap: (){
+              removeStringSF('place');
+              removeStringSF('enroll');
+              FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+            },
+          ),
+        ],
       ),
       body: listView(),
       floatingActionButton: FloatingActionButton(
@@ -58,14 +74,15 @@ class _UserHomeState extends State<UserHome> {
                 actions: [
                   OutlineButton(
                     child: Text('Create entry'),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState.validate()) {
 
                         purpose = _placeController.text;
                         _placeController.text = '';
                         date = DateFormat('dd-MM-yyyy').format(DateTime.now());
                         timeOut = DateFormat('H:m').format(DateTime.now());
-                        addEntry(context);
+                        await addEntry(context);
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserHome(placeName: widget.placeName,enrollNo: widget.enrollNo)), (route) => false);
                       }
                     },
                   )
@@ -90,8 +107,8 @@ class _UserHomeState extends State<UserHome> {
       'time_out': timeOut,
       'time_in': '',
       'checkedIn': false,
+      'createdAt': Timestamp.now(),
     });
-    Navigator.of(context).pop();
   }
 
   Widget listView() {
@@ -101,37 +118,41 @@ class _UserHomeState extends State<UserHome> {
             .collection('users')
             .doc(widget.enrollNo)
             .collection('entries')
+            .orderBy('createdAt',descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-
-          print('==================');
-          print(snapshot);
-          print('==================');
-
-          if (!snapshot.hasData) return emptyWidget();
-          return ListView.builder(
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot doc = snapshot.data.docs[index];
-              return ListTileUser(
-                entry: RecordUser(
-                    checkedIn: doc['checkedIn'],
-                    docID: doc.id,
-                    place: widget.placeName,
-                    enroll: widget.enrollNo,
-                    date: doc['date'],
-                    purpose: doc['purpose'],
-                    timeIn: doc['time_in'],
-                    timeOut: doc['time_out']
-                ),
-              );
-            },
-          );
+          print('---------------');
+          print(snapshot.toString()=="AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)");
+          print(snapshot.data);
+          print('---------------');
+          if (snapshot.toString()!="AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)") {
+            return ListView.builder(
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot doc = snapshot.data.docs[index];
+                return ListTileUser(
+                  entry: RecordUser(
+                      checkedIn: doc['checkedIn'],
+                      docID: doc.id,
+                      place: widget.placeName,
+                      enroll: widget.enrollNo,
+                      date: doc['date'],
+                      purpose: doc['purpose'],
+                      timeIn: doc['time_in'],
+                      timeOut: doc['time_out']
+                  ),
+                );
+              },
+            );
+          }
+          else {
+            return emptyWidget();
+          }
           //return new ListView(children: getListItems(snapshot));
         });
   }
 
-  getListItems(AsyncSnapshot<QuerySnapshot> snapshot) {
+  /*getListItems(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.docs
         .map((doc) => new ListTileUser(
               entry: new RecordUser(
@@ -145,7 +166,7 @@ class _UserHomeState extends State<UserHome> {
                   timeOut: doc['time_out']),
             ))
         .toList();
-  }
+  }*/
 
   Widget emptyWidget() {
     return Center(

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:entry_register/services/addBooltoSF.dart';
 import 'package:entry_register/services/addStringToSF.dart';
 import 'package:entry_register/services/listofplaces.dart';
 import 'package:flutter/cupertino.dart';
@@ -129,8 +128,7 @@ class _SignInAdminState extends State<SignInAdmin> {
                               if (documentSnapshot.exists) {
                                 Map<String,dynamic> map=documentSnapshot.data();
                                 if(placePin==map['pin']){
-                                  addBoolToSF(true);
-                                  addStringToSF(placeName);
+                                  addStringToSF('place', placeName);
                                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AdminHome(place: placeName,)), (route) => false);
                                 }
                                 else{

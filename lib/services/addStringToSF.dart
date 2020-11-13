@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-addStringToSF(String x) async {
+addStringToSF(String x,String y) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('place', x);
+  prefs.setString(x, y);
 }

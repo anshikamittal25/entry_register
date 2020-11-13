@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:entry_register/screens/userhome.dart';
-import 'package:entry_register/services/addBooltoSF.dart';
 import 'package:entry_register/services/addStringToSF.dart';
 import 'package:entry_register/services/listofplaces.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -135,6 +134,7 @@ class _SignInUserState extends State<SignInUser> {
                     ),
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: 'Enter the password',
@@ -191,7 +191,9 @@ class _SignInUserState extends State<SignInUser> {
                         if (placeName == '') {
                           status(context, 'Please choose the place');
                         } else if (_formKey.currentState.validate()) {
-                          addBoolToSF(false);
+
+                          addStringToSF('place',placeName);
+                          addStringToSF('enroll',_enrollController.text);
 
                           firebaseAuth
                               .createUserWithEmailAndPassword(

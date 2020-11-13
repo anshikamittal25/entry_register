@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:entry_register/screens/userhome.dart';
-import 'package:entry_register/services/addBooltoSF.dart';
+import 'package:entry_register/services/addStringToSF.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +62,7 @@ class _LogInUserState extends State<LogInUser> {
                     ),
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: 'Enter the password',
@@ -80,7 +81,6 @@ class _LogInUserState extends State<LogInUser> {
                       child: Text('Log In'),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          addBoolToSF(false);
 
                           firebaseAuth
                               .signInWithEmailAndPassword(
@@ -94,6 +94,9 @@ class _LogInUserState extends State<LogInUser> {
                                 .get()
                                 .then((value) {
                               Map<String, dynamic> data = value.data();
+                              addStringToSF('place', data['place']);
+                              addStringToSF('enroll', data['enroll']);
+
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
