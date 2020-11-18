@@ -3,10 +3,10 @@ import 'package:entry_register/screens/home.dart';
 import 'package:entry_register/screens/loading.dart';
 import 'package:entry_register/screens/something_went_wrong.dart';
 import 'package:entry_register/screens/userhome.dart';
+import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,6 +42,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: FutureBuilder(
         // Initialize FlutterFire:
         future: Firebase.initializeApp(),
@@ -81,9 +82,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> screenType() async {
     WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    place = prefs.getString('place');
-    enroll = prefs.getString('enroll');
+    place = await getStringSharedPref('place');
+    enroll = await getStringSharedPref('enroll');
     setState(() {
       x=(enroll == null)
           ? ((place == null)

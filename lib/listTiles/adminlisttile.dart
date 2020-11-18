@@ -1,5 +1,5 @@
-import 'package:entry_register/services/recordAdmin.dart';
-import 'package:entry_register/services/recordUser.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/recordAdmin.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/recordUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -31,13 +31,12 @@ class _ListTileAdminState extends State<ListTileAdmin> {
                     Text(widget.entry.room,style: TextStyle(fontSize: 30),),
                   ],
                 ),
-                Text(widget.entry.purpose,style: TextStyle(fontSize: 20),),
+                Text("Purpose: ${widget.entry.purpose}",style: TextStyle(fontSize: 20),),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Time out: ${widget.entry.timeOut}'),
-                    if (widget.entry.timeIn != '')
-                      Text('Time in: ${widget.entry.timeIn}')
+                    Text((widget.entry.timeIn != '')?('Time in: ${widget.entry.timeIn}'):('Not signed in yet'))
                   ],
                 )
               ],

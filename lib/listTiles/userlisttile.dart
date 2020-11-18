@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:entry_register/services/recordUser.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/recordUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -64,7 +64,7 @@ class _ListTileUserState extends State<ListTileUser> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Time out: ${entry.timeOut}'),
-                    Text('Time in: ${entry.timeIn}')
+                    Text((entry.timeIn=="")?('Not signed in yet.'):('Time in: ${entry.timeIn}'))
                   ],
                 )
               ],

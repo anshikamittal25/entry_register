@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:entry_register/screens/userhome.dart';
-import 'package:entry_register/services/addStringToSF.dart';
 import 'package:entry_register/services/listofplaces.dart';
+import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -192,8 +192,8 @@ class _SignInUserState extends State<SignInUser> {
                           status(context, 'Please choose the place');
                         } else if (_formKey.currentState.validate()) {
 
-                          addStringToSF('place',placeName);
-                          addStringToSF('enroll',_enrollController.text);
+                          addStringToSharedPref('place',placeName);
+                          addStringToSharedPref('enroll',_enrollController.text);
 
                           firebaseAuth
                               .createUserWithEmailAndPassword(

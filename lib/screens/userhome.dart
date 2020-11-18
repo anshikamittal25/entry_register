@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:entry_register/screens/loading.dart';
-import 'package:entry_register/screens/userlisttile.dart';
-import 'package:entry_register/services/recordUser.dart';
-import 'package:entry_register/services/removeStringSF.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/listTiles/userlisttile.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/recordUser.dart';
+import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,12 +36,23 @@ class _UserHomeState extends State<UserHome> {
         title: Text('UserHome'),
         actions: [
           GestureDetector(
-            child: Text('Log out'),
-            onTap: (){
-              removeStringSF('place');
-              removeStringSF('enroll');
+            child: Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Log out'),
+                ),
+              ),
+            ),
+            onTap: () {
+              removeStringSharedPref('place');
+              removeStringSharedPref('enroll');
               FirebaseAuth.instance.signOut();
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (route) => false);
             },
           ),
         ],
@@ -76,13 +87,18 @@ class _UserHomeState extends State<UserHome> {
                     child: Text('Create entry'),
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-
                         purpose = _placeController.text;
                         _placeController.text = '';
                         date = DateFormat('dd-MM-yyyy').format(DateTime.now());
                         timeOut = DateFormat('H:m').format(DateTime.now());
                         await addEntry(context);
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserHome(placeName: widget.placeName,enrollNo: widget.enrollNo)), (route) => false);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserHome(
+                                    placeName: widget.placeName,
+                                    enrollNo: widget.enrollNo)),
+                            (route) => false);
                       }
                     },
                   )
@@ -118,14 +134,24 @@ class _UserHomeState extends State<UserHome> {
             .collection('users')
             .doc(widget.enrollNo)
             .collection('entries')
-            .orderBy('createdAt',descending: true)
+            .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          print('---------------');
+          /*print('---------------');
           print(snapshot.toString()=="AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)");
-          print(snapshot.data);
-          print('---------------');
-          if (snapshot.toString()!="AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)") {
+          print(snapshot);
+          print(snapshot.data.docs.toString()=="[]");
+          print(snapshot.hasData);
+          print('---------------');*/
+
+          if (snapshot.toString() ==
+                  "AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)" &&
+              snapshot.data.docs.toString() == "[]") {
+            return emptyWidget();
+          } else if (snapshot.toString() ==
+              "AsyncSnapshot<QuerySnapshot>(ConnectionState.waiting, null, null)") {
+            return Loading();
+          } else {
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) {
@@ -139,14 +165,10 @@ class _UserHomeState extends State<UserHome> {
                       date: doc['date'],
                       purpose: doc['purpose'],
                       timeIn: doc['time_in'],
-                      timeOut: doc['time_out']
-                  ),
+                      timeOut: doc['time_out']),
                 );
               },
             );
-          }
-          else {
-            return emptyWidget();
           }
           //return new ListView(children: getListItems(snapshot));
         });

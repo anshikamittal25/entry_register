@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:entry_register/screens/adminlisttile.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/listTiles/adminlisttile.dart';
 import 'package:entry_register/screens/home.dart';
 import 'package:entry_register/services/capitalize.dart';
-import 'package:entry_register/services/recordAdmin.dart';
-import 'package:entry_register/services/removeStringSF.dart';
+import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/recordAdmin.dart';
+import 'package:entry_register/services/sharedPref.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -38,9 +38,17 @@ class _AdminHomeState extends State<AdminHome> {
         title: Text('${capitalize(widget.place)} Register'),
         actions: [
           GestureDetector(
-            child: Text('Sign out',textAlign: TextAlign.center,),
+            child: Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Sign out'),
+                ),
+              ),
+            ),
             onTap: (){
-              removeStringSF('place');
+              removeStringSharedPref('place');
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
             },
           ),
@@ -96,7 +104,7 @@ class _AdminHomeState extends State<AdminHome> {
       }).toList();
       setState(() {
         entriesList.addAll(entryList);
-        //entriesList.sort((a,b)=>b.createdAt.compareTo(a.createdAt));
+        entriesList.sort((a,b)=>b.createdAt.compareTo(a.createdAt));
       });
     }
   }
