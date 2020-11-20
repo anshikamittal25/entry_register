@@ -5,6 +5,7 @@ import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 class LogInUser extends StatefulWidget {
   @override
@@ -26,6 +27,8 @@ class _LogInUserState extends State<LogInUser> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       body: Builder(
         builder: (BuildContext context) {
@@ -35,47 +38,49 @@ class _LogInUserState extends State<LogInUser> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Email ID',
-                    style: TextStyle(
-                      fontSize: 20,
+                  Padding(
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email ID',
+                        labelStyle: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                        ),
+                        hintText: 'Enter your email Id',
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your email id';
+                        } else if (!EmailValidator.validate(value)) {
+                          return 'Invalid email.';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your email Id',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your email id';
-                      } else if (!EmailValidator.validate(value)) {
-                        return 'Invalid email.';
-                      }
-                      return null;
-                    },
-                  ),
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter the password',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Password can\'t be empty!!';
-                      }
-                      return null;
-                    },
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter the password',
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Password can\'t be empty!!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
                     child: RaisedButton(
                       color: Colors.red,
                       child: Text('Log In'),

@@ -6,6 +6,7 @@ import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:intl/intl.dart';
 
 import 'home.dart';
@@ -31,6 +32,8 @@ class _UserHomeState extends State<UserHome> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('UserHome'),
@@ -40,7 +43,7 @@ class _UserHomeState extends State<UserHome> {
               child: Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
                   child: Text('Log out'),
                 ),
               ),
@@ -137,12 +140,6 @@ class _UserHomeState extends State<UserHome> {
             .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          /*print('---------------');
-          print(snapshot.toString()=="AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)");
-          print(snapshot);
-          print(snapshot.data.docs.toString()=="[]");
-          print(snapshot.hasData);
-          print('---------------');*/
 
           if (snapshot.toString() ==
                   "AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)" &&
@@ -170,25 +167,8 @@ class _UserHomeState extends State<UserHome> {
               },
             );
           }
-          //return new ListView(children: getListItems(snapshot));
         });
   }
-
-  /*getListItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs
-        .map((doc) => new ListTileUser(
-              entry: new RecordUser(
-                  checkedIn: doc['checkedIn'],
-                  docID: doc.id,
-                  place: widget.placeName,
-                  enroll: widget.enrollNo,
-                  date: doc['date'],
-                  timeIn: doc['time_in'],
-                  purpose: doc['purpose'],
-                  timeOut: doc['time_out']),
-            ))
-        .toList();
-  }*/
 
   Widget emptyWidget() {
     return Center(
@@ -198,17 +178,17 @@ class _UserHomeState extends State<UserHome> {
           Text(
             'No entry yet!!!',
             style: TextStyle(
-                fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
+                fontSize: ScreenUtil().setSp(50), color: Colors.brown, fontWeight: FontWeight.bold),
           ),
           Icon(
             Icons.sentiment_neutral,
-            size: 80,
+            size: ScreenUtil().setWidth(100),
             color: Colors.red,
           ),
           Text(
             'GO! Create your first entry',
             style: TextStyle(
-                fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
+                fontSize: ScreenUtil().setSp(50), color: Colors.brown, fontWeight: FontWeight.bold),
           ),
         ],
       ),

@@ -7,9 +7,13 @@ import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -81,7 +85,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> screenType() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    //WidgetsFlutterBinding.ensureInitialized();
     place = await getStringSharedPref('place');
     enroll = await getStringSharedPref('enroll');
     setState(() {

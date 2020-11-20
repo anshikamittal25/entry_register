@@ -6,6 +6,7 @@ import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/
 import 'package:entry_register/services/sharedPref.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 class AdminHome extends StatefulWidget {
   final String place;
@@ -33,6 +34,8 @@ class _AdminHomeState extends State<AdminHome> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${capitalize(widget.place)} Register'),
@@ -42,7 +45,7 @@ class _AdminHomeState extends State<AdminHome> {
               child: Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
                   child: Text('Sign out'),
                 ),
               ),
@@ -121,11 +124,11 @@ class _AdminHomeState extends State<AdminHome> {
           Text(
             'No entry yet!!!',
             style: TextStyle(
-                fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
+                fontSize: ScreenUtil().setSp(65), color: Colors.brown, fontWeight: FontWeight.bold),
           ),
           Icon(
             Icons.sentiment_neutral,
-            size: 80,
+            size: ScreenUtil().setSp(100),
             color: Colors.red,
           ),
         ],

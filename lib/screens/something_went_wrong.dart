@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 class SomethingWentWrong extends StatefulWidget {
   @override
@@ -9,6 +10,8 @@ class SomethingWentWrong extends StatefulWidget {
 class _SomethingWentWrongState extends State<SomethingWentWrong> {
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Entry Register'),
@@ -17,26 +20,15 @@ class _SomethingWentWrongState extends State<SomethingWentWrong> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Something went wrong.',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(height: 10,),
-            OutlineButton(
+            Image.asset('assets/images/something_went_wrong.png'),
+            Padding(
+              padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
               child: Text(
-                'Refresh',
+                'Oops!!! Something went wrong.',
                 style: TextStyle(
-                  color: Colors.blue,
+                  fontSize: ScreenUtil().setWidth(70),
                 ),
               ),
-              borderSide: BorderSide(
-                color: Colors.blue,
-              ),
-              onPressed: (){
-                setState(() { });
-              },
             ),
           ],
         ),

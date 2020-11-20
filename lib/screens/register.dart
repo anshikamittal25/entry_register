@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -24,6 +25,8 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
         return SafeArea(
@@ -33,7 +36,7 @@ class _RegisterState extends State<Register> {
               children: [
                 Text(
                   'REGISTER',
-                  style: TextStyle(fontSize: 50),
+                  style: TextStyle(fontSize: ScreenUtil().setSp(100)),
                 ),
                 Form(
                   key: _formKey,
@@ -41,7 +44,7 @@ class _RegisterState extends State<Register> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: EdgeInsets.all(ScreenUtil().setWidth(15)),
                         child: TextFormField(
                           controller: _textEditingController,
                           decoration: InputDecoration(
@@ -56,12 +59,12 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: ScreenUtil().setWidth(100),
                       ),
                       Text(
                         'Set up a PIN for your place',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: ScreenUtil().setSp(50),
                         ),
                       ),
                       PinEntryTextField(
@@ -71,13 +74,13 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       SizedBox(
-                        height: 10,
+                        height: ScreenUtil().setWidth(50),
                       ),
                       Text(
                         '(This will be used by the administrator while signing in.)',
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(30.0),
+                        padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
                         child: RaisedButton(
                           color: Colors.red,
                           child: Text('Register'),

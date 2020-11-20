@@ -3,6 +3,7 @@ import 'package:entry_register/services/listofplaces.dart';
 import 'package:entry_register/services/sharedPref.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 
 import 'adminhome.dart';
@@ -29,6 +30,8 @@ class _SignInAdminState extends State<SignInAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       body: Builder(
           builder: (BuildContext context){
@@ -62,18 +65,18 @@ class _SignInAdminState extends State<SignInAdmin> {
                                             });
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.all(3.0),
+                                            padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
                                             child: Card(
                                               child: Padding(
-                                                padding: const EdgeInsets.all(10.0),
+                                                padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
                                                 child: Text(
                                                   listPlaces[index],
                                                   style: TextStyle(
-                                                    fontSize: 20,
+                                                    fontSize: ScreenUtil().setSp(65),
                                                   ),
                                                 ),
                                               ),
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50),),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50)),),
                                             ),
                                           ),
                                         );
@@ -87,12 +90,12 @@ class _SignInAdminState extends State<SignInAdmin> {
                         );
                       },
                     ),
-                    Text(text),
-                    SizedBox(height: 40,),
+                    Text(text,style: TextStyle(fontSize: ScreenUtil().setSp(50)),),
+                    SizedBox(height: ScreenUtil().setWidth(40),),
                     Text(
                       'Enter the PIN for your place',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: ScreenUtil().setSp(50),
                       ),
                     ),
                     PinEntryTextField(
@@ -101,7 +104,7 @@ class _SignInAdminState extends State<SignInAdmin> {
                         placePin=pin;
                       },
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: ScreenUtil().setWidth(50),),
                     Center(
                       child: Text(
                         '(The one that was set up by the administrator during registration.)',
@@ -109,7 +112,7 @@ class _SignInAdminState extends State<SignInAdmin> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
                       child: RaisedButton(
                         color: Colors.red,
                         child: Text('Sign In'),

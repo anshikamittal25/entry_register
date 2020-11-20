@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/models/recordUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:intl/intl.dart';
 
 class ListTileUser extends StatefulWidget {
@@ -23,12 +24,14 @@ class _ListTileUserState extends State<ListTileUser> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
             child: Column(
               children: [
                 Text(entry.date),
@@ -71,7 +74,7 @@ class _ListTileUserState extends State<ListTileUser> {
             ),
           ),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenUtil().setWidth(25))),
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:entry_register/services/sharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 class SignInUser extends StatefulWidget {
   @override
@@ -40,6 +41,8 @@ class _SignInUserState extends State<SignInUser> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return Scaffold(
       body: Builder(
         builder: (BuildContext context) {
@@ -74,21 +77,21 @@ class _SignInUserState extends State<SignInUser> {
                                           });
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.all(3.0),
+                                          padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
                                           child: Card(
                                             child: Padding(
                                               padding:
-                                                  const EdgeInsets.all(10.0),
+                                                  EdgeInsets.all(ScreenUtil().setWidth(10)),
                                               child: Text(
                                                 listPlaces[index],
                                                 style: TextStyle(
-                                                  fontSize: 20,
+                                                  fontSize: ScreenUtil().setSp(65),
                                                 ),
                                               ),
                                             ),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                                  BorderRadius.circular(ScreenUtil().setWidth(50)),
                                             ),
                                           ),
                                         ),
@@ -103,87 +106,91 @@ class _SignInUserState extends State<SignInUser> {
                       );
                     },
                   ),
-                  Text(text),
+                  Text(text,style: TextStyle(fontSize: ScreenUtil().setSp(50)),),
                   SizedBox(
-                    height: 40,
-                  ),
-                  Text(
-                    'Email ID',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your email Id',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your email id';
-                      } else if (!EmailValidator.validate(value)) {
-                        return 'Invalid email.';
-                      }
-                      return null;
-                    },
-                  ),
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter the password',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Password can\'t be empty!!';
-                      }
-                      return null;
-                    },
-                  ),
-                  Text(
-                    'Enrollment Number',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _enrollController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your enrollment number',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Enrollment number can\'t be empty!!';
-                      }
-                      return null;
-                    },
-                  ),
-                  Text(
-                    'Room Number',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _roomController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your room number',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Room number can\'t be empty!!';
-                      }
-                      return null;
-                    },
+                    height: ScreenUtil().setWidth(40),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your email Id',
+                        labelText: 'Email ID',
+                        labelStyle: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your email id';
+                        } else if (!EmailValidator.validate(value)) {
+                          return 'Invalid email.';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter the password',
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Password can\'t be empty!!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                    child: TextFormField(
+                      controller: _enrollController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your enrollment number',
+                        labelText: 'Enrollment Number',
+                        labelStyle: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Enrollment number can\'t be empty!!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                    child: TextFormField(
+                      controller: _roomController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your room number',
+                        labelText: 'Room Number',
+                        labelStyle: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Room number can\'t be empty!!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
                     child: RaisedButton(
                       color: Colors.red,
                       child: Text('Register'),

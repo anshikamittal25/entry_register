@@ -4,6 +4,7 @@ import 'file:///C:/Users/lenovo/AndroidStudioProjects/entry_register/lib/screens
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 import 'logInUser.dart';
 
@@ -15,6 +16,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+
     return MaterialApp(
       title: 'Entry Register',
       debugShowCheckedModeBanner: false,
@@ -29,8 +32,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(radius: 60,backgroundImage: AssetImage('assets/images/entry_register_logo.jpg'),),
-              SizedBox(height: 50,),
+              CircleAvatar(radius: ScreenUtil().setWidth(300),backgroundImage: AssetImage('assets/images/entry_register_logo.jpg'),),
+              SizedBox(height: ScreenUtil().setWidth(100),),
               RaisedButton(
                 textColor: Colors.white,
                 color: Colors.blue,
@@ -53,6 +56,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
+              SizedBox(height: ScreenUtil().setWidth(50),),
               Text('Already have an account?'),
               GestureDetector(
                 child: Text('Log in as user',style: TextStyle(color: Colors.blueAccent[700],decoration: TextDecoration.underline),),
@@ -63,10 +67,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-              SizedBox(height: 80,),
-              Text('New to the app?'),
-              Text('Register a new place !!!'),
-              SizedBox(height: 10,),
+              SizedBox(height: ScreenUtil().setWidth(80),),
               RaisedButton(
                 textColor: Colors.white,
                 color: Colors.red,
