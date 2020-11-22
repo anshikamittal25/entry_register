@@ -32,21 +32,26 @@ class _UserHomeState extends State<UserHome> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+    ScreenUtil.init(context,
+        designSize: Size(1080, 2340), allowFontScaling: false);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('UserHome'),
         actions: [
           GestureDetector(
-            child: Expanded(
-              child: Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
-                  child: Text('Log out'),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(20)),
+                      child: Text('Log out'),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             onTap: () {
               removeStringSharedPref('place');
@@ -69,7 +74,15 @@ class _UserHomeState extends State<UserHome> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Create New Entry'),
+                title: Text(
+                  'Create New Entry',
+                  style: TextStyle(
+                    color: Colors.blue[900],
+                    fontFamily: 'Acme',
+                    fontWeight: FontWeight.bold,
+                    fontSize: ScreenUtil().setSp(60),
+                  ),
+                ),
                 content: Form(
                   key: _formKey,
                   child: TextFormField(
@@ -86,8 +99,19 @@ class _UserHomeState extends State<UserHome> {
                   ),
                 ),
                 actions: [
-                  OutlineButton(
-                    child: Text('Create entry'),
+                  RaisedButton(
+                    color: Colors.blue[900],
+                    padding: EdgeInsets.symmetric(
+                        vertical: ScreenUtil().setWidth(20),
+                        horizontal: ScreenUtil().setWidth(40)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(ScreenUtil().setWidth(100)),
+                    ),
+                    child: Text(
+                      'Create entry',
+                      style: TextStyle(color: Colors.white, fontFamily: 'Acme'),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         purpose = _placeController.text;
@@ -140,7 +164,6 @@ class _UserHomeState extends State<UserHome> {
             .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-
           if (snapshot.toString() ==
                   "AsyncSnapshot<QuerySnapshot>(ConnectionState.active, Instance of 'QuerySnapshot', null)" &&
               snapshot.data.docs.toString() == "[]") {
@@ -174,21 +197,30 @@ class _UserHomeState extends State<UserHome> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'No entry yet!!!',
+            textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: ScreenUtil().setSp(50), color: Colors.brown, fontWeight: FontWeight.bold),
+              fontSize: ScreenUtil().setSp(100),
+              color: Colors.blue[900],
+              fontStyle: FontStyle.italic,
+            ),
           ),
           Icon(
             Icons.sentiment_neutral,
-            size: ScreenUtil().setWidth(100),
-            color: Colors.red,
+            size: ScreenUtil().setWidth(400),
+            color: Colors.blue[900],
           ),
           Text(
             'GO! Create your first entry',
+            textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: ScreenUtil().setSp(50), color: Colors.brown, fontWeight: FontWeight.bold),
+              fontSize: ScreenUtil().setSp(100),
+              color: Colors.blue[900],
+              fontStyle: FontStyle.italic,
+            ),
           ),
         ],
       ),

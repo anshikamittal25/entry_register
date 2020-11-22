@@ -24,23 +24,36 @@ class _ListTileUserState extends State<ListTileUser> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+    ScreenUtil.init(context,
+        designSize: Size(1080, 2340), allowFontScaling: false);
 
     return Container(
       child: Padding(
         padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
         child: Card(
+          shadowColor: Theme.of(context).primaryColor,
+          elevation: ScreenUtil().setWidth(10),
           child: Padding(
-            padding: EdgeInsets.all(ScreenUtil().setWidth(8)),
+            padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
             child: Column(
               children: [
-                Text(entry.date),
+                Text(
+                  entry.date,
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(50),
+                    fontStyle: FontStyle.italic,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(entry.purpose),
+                    Text(
+                      entry.purpose,
+                      style: TextStyle(fontSize: ScreenUtil().setSp(100)),
+                    ),
                     RaisedButton(
-                      child: Text(entry.checkedIn ? 'Checked In' : 'Check In'),
+                      child: Text(entry.checkedIn ? 'Checked In' : 'Check In',style: TextStyle(color: Colors.white,),),
                       onPressed: (!entry.checkedIn)
                           ? () {
                               setState(() {
@@ -53,7 +66,10 @@ class _ListTileUserState extends State<ListTileUser> {
                                     .doc(entry.enroll)
                                     .collection('entries')
                                     .doc(entry.docID)
-                                    .update({'time_in': entry.timeIn, 'checkedIn': true,})
+                                    .update({
+                                      'time_in': entry.timeIn,
+                                      'checkedIn': true,
+                                    })
                                     .then((value) => print("User Updated"))
                                     .catchError((error) =>
                                         print("Failed to update user: $error"));
@@ -66,15 +82,31 @@ class _ListTileUserState extends State<ListTileUser> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Time out: ${entry.timeOut}'),
-                    Text((entry.timeIn=="")?('Not signed in yet.'):('Time in: ${entry.timeIn}'))
+                    Text(
+                      'Time out: ${entry.timeOut}',
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(50),
+                        fontStyle: FontStyle.italic,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Text(
+                      (entry.timeIn == "")
+                          ? ('Not signed in yet.')
+                          : ('Time in: ${entry.timeIn}'),
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(50),
+                        fontStyle: FontStyle.italic,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
                   ],
                 )
               ],
             ),
           ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenUtil().setWidth(25))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50))),
         ),
       ),
     );

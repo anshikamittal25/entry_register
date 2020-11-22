@@ -40,71 +40,72 @@ class _RegisterState extends State<Register> {
                 ),
                 Form(
                   key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(ScreenUtil().setWidth(15)),
-                        child: TextFormField(
-                          controller: _textEditingController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter the place to be registered',
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter the name of the place';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setWidth(100),
-                      ),
-                      Text(
-                        'Set up a PIN for your place',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
-                        ),
-                      ),
-                      PinEntryTextField(
-                        isTextObscure: true,
-                        onSubmit: (String pin) {
-                          placePin = pin;
-                        },
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setWidth(50),
-                      ),
-                      Text(
-                        '(This will be used by the administrator while signing in.)',
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
-                        child: RaisedButton(
-                          color: Colors.red,
-                          child: Text('Register'),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              if (placePin != null) {
-                                placeName = _textEditingController.text;
-                                places.doc(placeName.trim().toLowerCase()).set({
-                                  'pin': placePin,
-                                }).then((value) {
-                                  registerStatus(context,
-                                      "Your place has been successfully registered.");
-                                  Navigator.pop(context);
-                                }).catchError((error) => registerStatus(
-                                    context, "An error occurred."));
-                                //places.doc(placeName).collection("entries").doc();
-                              } else {
-                                registerStatus(context, 'Please enter the PIN');
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(ScreenUtil().setWidth(15)),
+                          child: TextFormField(
+                            controller: _textEditingController,
+                            decoration: InputDecoration(
+                              hintText: 'Enter the place to be registered',
+                            ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter the name of the place';
                               }
-                            }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setWidth(100),
+                        ),
+                        Text(
+                          'Set up a PIN for your place',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
+                        ),
+                        PinEntryTextField(
+                          isTextObscure: true,
+                          onSubmit: (String pin) {
+                            placePin = pin;
                           },
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: ScreenUtil().setWidth(50),
+                        ),
+                        Text(
+                          '(This will be used by the administrator while signing in.)',
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
+                          child: RaisedButton(
+                            textColor: Colors.white,
+                            child: Text('Register',style: TextStyle(fontSize: ScreenUtil().setSp(60)),),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                if (placePin != null) {
+                                  placeName = _textEditingController.text;
+                                  places.doc(placeName.trim().toLowerCase()).set({
+                                    'pin': placePin,
+                                  }).then((value) {
+                                    registerStatus(context,
+                                        "Your place has been successfully registered.");
+                                    Navigator.pop(context);
+                                  }).catchError((error) => registerStatus(
+                                      context, "An error occurred."));
+                                } else {
+                                  registerStatus(context, 'Please enter the PIN');
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

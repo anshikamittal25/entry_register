@@ -35,90 +35,92 @@ class _LogInUserState extends State<LogInUser> {
           return Center(
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email ID',
-                        labelStyle: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email ID',
+                          labelStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
+                          hintText: 'Enter your email Id',
                         ),
-                        hintText: 'Enter your email Id',
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your email id';
+                          } else if (!EmailValidator.validate(value)) {
+                            return 'Invalid email.';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your email id';
-                        } else if (!EmailValidator.validate(value)) {
-                          return 'Invalid email.';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter the password',
-                        labelText: 'Password',
-                        labelStyle: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: TextFormField(
+                        obscureText: true,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter the password',
+                          labelText: 'Password',
+                          labelStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
                         ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Password can\'t be empty!!';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Password can\'t be empty!!';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: RaisedButton(
-                      color: Colors.red,
-                      child: Text('Log In'),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        child: Text('Log In',style: TextStyle(fontSize: ScreenUtil().setSp(60)),),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
 
-                          firebaseAuth
-                              .signInWithEmailAndPassword(
-                                  email: _emailController.text,
-                                  password: _passwordController.text)
-                              .then((value) {
-                            status(context, 'Login In successful');
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(firebaseAuth.currentUser.uid)
-                                .get()
+                            firebaseAuth
+                                .signInWithEmailAndPassword(
+                                    email: _emailController.text,
+                                    password: _passwordController.text)
                                 .then((value) {
-                              Map<String, dynamic> data = value.data();
-                              addStringToSharedPref('place', data['place']);
-                              addStringToSharedPref('enroll', data['enroll']);
+                              status(context, 'Login In successful');
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(firebaseAuth.currentUser.uid)
+                                  .get()
+                                  .then((value) {
+                                Map<String, dynamic> data = value.data();
+                                addStringToSharedPref('place', data['place']);
+                                addStringToSharedPref('enroll', data['enroll']);
 
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserHome(
-                                        placeName: data['place'],
-                                        enrollNo: data['enroll'],
-                                      )),
-                                      (route) => false);
-                            }).catchError((e) => print(e));
-                          }).catchError((err) {
-                            status(context, err.message);
-                          });
-                        }
-                      },
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserHome(
+                                          placeName: data['place'],
+                                          enrollNo: data['enroll'],
+                                        )),
+                                        (route) => false);
+                              }).catchError((e) => print(e));
+                            }).catchError((err) {
+                              status(context, err.message);
+                            });
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

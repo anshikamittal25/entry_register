@@ -25,11 +25,10 @@ class _SignInUserState extends State<SignInUser> {
   String placeName = '';
   String text = '';
 
-
   @override
   void initState() {
     super.initState();
-    listPlaces=Places.getList();
+    listPlaces = Places.getList();
   }
 
   @override
@@ -41,7 +40,8 @@ class _SignInUserState extends State<SignInUser> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: Size(1080, 2340), allowFontScaling: false);
+    ScreenUtil.init(context,
+        designSize: Size(1080, 2340), allowFontScaling: false);
 
     return Scaffold(
       body: Builder(
@@ -49,201 +49,239 @@ class _SignInUserState extends State<SignInUser> {
           return Center(
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlineButton(
-                    child: Text('Choose the place'),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: listPlaces.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            text = listPlaces[index];
-                                            placeName = listPlaces[index];
-                                          });
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
-                                          child: Card(
-                                            child: Padding(
-                                              padding:
-                                                  EdgeInsets.all(ScreenUtil().setWidth(10)),
-                                              child: Text(
-                                                listPlaces[index],
-                                                style: TextStyle(
-                                                  fontSize: ScreenUtil().setSp(65),
-                                                ),
-                                              ),
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(ScreenUtil().setWidth(50)),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  Text(text,style: TextStyle(fontSize: ScreenUtil().setSp(50)),),
-                  SizedBox(
-                    height: ScreenUtil().setWidth(40),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your email Id',
-                        labelText: 'Email ID',
-                        labelStyle: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
-                        ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlineButton(
+                      child: Text(
+                        'Choose the place',
+                        style: TextStyle(fontSize: ScreenUtil().setSp(60)),
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your email id';
-                        } else if (!EmailValidator.validate(value)) {
-                          return 'Invalid email.';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter the password',
-                        labelText: 'Password',
-                        labelStyle: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Password can\'t be empty!!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: TextFormField(
-                      controller: _enrollController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your enrollment number',
-                        labelText: 'Enrollment Number',
-                        labelStyle: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enrollment number can\'t be empty!!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
-                    child: TextFormField(
-                      controller: _roomController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your room number',
-                        labelText: 'Room Number',
-                        labelStyle: TextStyle(
-                          fontSize: ScreenUtil().setSp(50),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Room number can\'t be empty!!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
-                    child: RaisedButton(
-                      color: Colors.red,
-                      child: Text('Register'),
                       onPressed: () {
-                        if (placeName == '') {
-                          status(context, 'Please choose the place');
-                        } else if (_formKey.currentState.validate()) {
-
-                          addStringToSharedPref('place',placeName);
-                          addStringToSharedPref('enroll',_enrollController.text);
-
-                          firebaseAuth
-                              .createUserWithEmailAndPassword(
-                                  email: _emailController.text,
-                                  password: _passwordController.text)
-                              .then((value) {
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(value.user.uid)
-                                .set({
-                                  'place': placeName,
-                                  'enroll': _enrollController.text
-                                })
-                                .then((value) => print('success'))
-                                .catchError((error) => status(context, error.message));
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UserHome(
-                                          placeName: placeName,
-                                          enrollNo: _enrollController.text,
-                                        )),
-                                (route) => false);
-                          }).catchError((err) {
-                            status(context, err.message);
-                          });
-                          places
-                              .doc(placeName.trim().toLowerCase())
-                              .collection('users')
-                              .doc(_enrollController.text)
-                              .set({
-                            'room': _roomController.text,
-                          });
-                        }
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              elevation: ScreenUtil().setWidth(1000),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    ScreenUtil().setWidth(50)),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    child: (listPlaces.isEmpty)
+                                        ? Padding(
+                                            padding: EdgeInsets.all(
+                                                ScreenUtil().setWidth(20)),
+                                            child: (Text(
+                                              'No places registered yet!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.blue[900],
+                                                fontStyle: FontStyle.italic,
+                                                fontSize:
+                                                    ScreenUtil().setSp(80),
+                                              ),
+                                            )),
+                                          )
+                                        : (listPlacesWidget()),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       },
                     ),
-                  ),
-                ],
+                    Text(
+                      text,
+                      style: TextStyle(fontSize: ScreenUtil().setSp(50)),
+                    ),
+                    SizedBox(
+                      height: ScreenUtil().setWidth(40),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your email Id',
+                          labelText: 'Email ID',
+                          labelStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your email id';
+                          } else if (!EmailValidator.validate(value)) {
+                            return 'Invalid email.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: TextFormField(
+                        obscureText: true,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter the password',
+                          labelText: 'Password',
+                          labelStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Password can\'t be empty!!';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: TextFormField(
+                        controller: _enrollController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your enrollment number',
+                          labelText: 'Enrollment Number',
+                          labelStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Enrollment number can\'t be empty!!';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(30)),
+                      child: TextFormField(
+                        controller: _roomController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your room number',
+                          labelText: 'Room Number',
+                          labelStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Room number can\'t be empty!!';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(ScreenUtil().setWidth(70)),
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        child: Text(
+                          'Register',
+                          style: TextStyle(fontSize: ScreenUtil().setSp(60)),
+                        ),
+                        onPressed: () {
+                          if (placeName == '') {
+                            status(context, 'Please choose the place');
+                          } else if (_formKey.currentState.validate()) {
+                            addStringToSharedPref('place', placeName);
+                            addStringToSharedPref(
+                                'enroll', _enrollController.text);
+
+                            firebaseAuth
+                                .createUserWithEmailAndPassword(
+                                    email: _emailController.text,
+                                    password: _passwordController.text)
+                                .then((value) {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(value.user.uid)
+                                  .set({
+                                    'place': placeName,
+                                    'enroll': _enrollController.text
+                                  })
+                                  .then((value) => print('success'))
+                                  .catchError((error) =>
+                                      status(context, error.message));
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserHome(
+                                            placeName: placeName,
+                                            enrollNo: _enrollController.text,
+                                          )),
+                                  (route) => false);
+                            }).catchError((err) {
+                              status(context, err.message);
+                            });
+                            places
+                                .doc(placeName.trim().toLowerCase())
+                                .collection('users')
+                                .doc(_enrollController.text)
+                                .set({
+                              'room': _roomController.text,
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget listPlacesWidget() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: listPlaces.length,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+            setState(() {
+              text = listPlaces[index];
+              placeName = listPlaces[index];
+            });
+          },
+          child: Padding(
+            padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
+            child: Card(
+              shadowColor: Theme.of(context).primaryColor,
+              elevation: ScreenUtil().setWidth(10),
+              child: Padding(
+                padding: EdgeInsets.all(ScreenUtil().setWidth(10)),
+                child: Text(
+                  listPlaces[index],
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(65),
+                    color: Colors.blue[900],
+                    fontFamily: 'Acme',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50)),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
