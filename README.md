@@ -17,7 +17,7 @@ The flow of the app is as follows:
 -After that the residents need to create their account on the app corresponding to their hostel.
 -After the resident is logged-in in the app, he can create entry when he goes out by just typing the purpose.
 -When he returns to the hostel he needs to check in and the time will be saved.
-<img src='readme_images/signup_user.jpeg'>
+<img src='readme_images/sigup_user.jpeg'>
 <img src='readme_images/user_home.jpeg'>
 <img src='readme_images/create_entry.jpeg'>
 
